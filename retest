@@ -16,36 +16,53 @@ TRACE=NO
 SOURCE=NO
 
 # parse and apply command line arguments
-for i in "$@"; do
+#for i in "$@"; do
 
-case $i in
-    -h|--help)
-    HELP=YES
-    ;;
-    -v|--verbose)
-    VERBOSE=YES
-    ;;
-    -t|--trace)
-    TRACE=YES
-    ;;
-    -s|--source)
-    SOURCE=YES
-    ;;
-    -p|--path)
-    RETEST_PATH="${i#*=}"
-    ;;
-    -c|--case)
-    CASE="${i#*=}"
-    ;;
-    -x|--exec)
-    EXEC="${i#*=}"
-    ;;
-    -e|--expect)
-    EXPECT="${i#*=}"
-    ;;
-    *)
-    ;;
-esac
+while [[ $# -gt 0 ]]
+do
+    key="${1}"
+
+    case ${key} in
+        -h|--help)
+        HELP=YES
+        shift
+        ;;
+        -v|--verbose)
+        VERBOSE=YES
+        shift
+        ;;
+        -t|--trace)
+        TRACE=YES
+        shift
+        ;;
+        -s|--source)
+        SOURCE=YES
+        shift
+        ;;
+        -p|--path)
+        RETEST_PATH="${2}"
+        shift
+        shift
+        ;;
+        -c|--case)
+        CASE="${2}"
+        shift
+        shift
+        ;;
+        -x|--exec)
+        EXEC="${2}"
+        shift
+        shift
+        ;;
+        -e|--expect)
+        EXPECT="${2}"
+        shift
+        shift
+        ;;
+        *)
+        shift
+        ;;
+    esac
 done
 
 # === help ===
@@ -69,20 +86,29 @@ if [ $HELP == 'YES' ]; then
     exit 0
 fi
 
+# save base dir
+baseDir=`pwd`
+
 # === find and run all the tests === 
-for f in $(find $TESTPATH -name "*.$CASE"); do
+for f in $(find $RETEST_PATH -name "*.$CASE"); do
 
     test=${f%.$CASE}       # test case name with path included and extension excluded
     dir=`dirname $f`       # test case directory
     case=`basename $f`     # test case file name
-    base=${case%.$CASE}    # pure test case name (no extension)
-    expect=$base".$EXPECT" # derive an expected data file name from the base name
+    name=${case%.$CASE}    # pure test case name (no extension)
+    expect=$name".$EXPECT" # derive an expected data file name from the name
 
     # set test directory
     cd $dir
 
     val=`$EXEC $case`
-    match=`cat $expect`
+
+    if [ ! -f $expect ]; then
+        echo "Missing [$test.$EXPECT] to match expected results"
+        match='Missing Data'
+    else
+        match=`cat $expect`
+    fi
 
     if [ "$val" == "$match" ]
     then
@@ -90,6 +116,7 @@ for f in $(find $TESTPATH -name "*.$CASE"); do
             echo $test' - OK'
         fi
         if [ $SOURCE == 'YES' ]; then
+            echo "=== $f ==="
             cat $case
         fi
         if [ $TRACE == 'YES' ]; then
@@ -105,16 +132,24 @@ for f in $(find $TESTPATH -name "*.$CASE"); do
             echo "]"
         fi
         if [ $SOURCE == 'YES' ]; then
+            echo "=== $f ==="
             cat $case
         fi
         if [ $TRACE == 'YES' ]; then
             echo $val' == '$match
         fi
     fi
+
+    # jump back to base
+    cd $baseDir
 done
 
 if [ $FAILED == 'YES' ]; then
-    echo 'FAILED - Test Suit completed with errors'
+    if [ $VERBOSE == 'YES' ]; then
+        echo 'FAILED - Test Suit completed with errors'
+    else
+        echo 'FAILED'
+    fi
     exit 1
 else
 	#if [ $VERBOSE == 'YES' ]; then
