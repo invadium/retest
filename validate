@@ -1,0 +1,8 @@
+#!/bin/sh
+./retest -v
+./retest -p ./test-python -c py -x python -v
+./retest -p ./test-ruby -c rb -x ruby -v
+./retest -p ./test-perl -c pl -x perl -v
+./retest -p ./test-tcl -c tcl -x tclsh -v
+./retest -p ./test-lua -c lua -x lua -v
+
