@@ -6,8 +6,8 @@ _A minimalistic bash-powered test anti-framework._
 ## Intro
 
 What if I tell you, that you can test your system without
-a testing framework using nothing, but a single shell script
-and a bunch of plain text files.
+a testing framework, using nothing, but a bunch
+of bash scripts and text files.
 
 With ReTest it is possible to setup a minimalistic
 testing environment just by dropping a single shell
@@ -25,6 +25,13 @@ You can use _curl_ for that:
     chmod +x retest
 ```
 
+Now you can run tests grouped in directories. Check out:
+```
+    ./retest --help
+```
+for details.
+
+
 
 ## Test Suit Organization
 
@@ -33,6 +40,21 @@ and expected result files.
 
 The name of a test case MUST match the name
 of the corresponding result file.
+
+The idea behind _retest_ testing model
+is pretty simple - it runs the test case scripts
+and matches results with data placed in *.expect files.
+If a result matches expected data, the test passes.
+Otherwise, the test fails and the whole test set run
+is considered failed
+
+Check out a test suit organization example
+for [bash](https://github.com/invider/retest/tree/master/test)
+as well as for other languages.
+
+Look at [some examples](https://github.com/invider/retest/blob/master/validate)
+of how _retest_ can be run for various scenarios.
+
 
 ### Customize test cases source directory
 
