@@ -2,6 +2,7 @@
 
 _A minimalistic bash-powered test anti-framework._
 
+
 ## Intro
 
 What if I tell you, that you can test your system without
@@ -12,10 +13,26 @@ With ReTest it is possible to setup a minimalistic
 testing environment just by dropping a single shell
 script into your project's directory.
 
+
+## Installation
+
+Just download and place the _retest_ bash script
+near your test suit folder.
+
+You can use _curl_ for that:
+```
+    curl https://raw.githubusercontent.com/invider/retest/master/retest > retest
+    chmod +x retest
+```
+
+
 ## Test Suit Organization
 
 A test suit is just a folder with test case scripts
 and expected result files.
+
+The name of a test case MUST match the name
+of the corresponding result file.
 
 ### Customize test cases source directory
 
@@ -27,7 +44,11 @@ the location explicitly:
     ./retest --path ./test-cases
     ./retest -p ./test/set-1
     ./retest -p ./test/set-2
+    ./retest -p ./test
 ```
+As you can see, it is possible to split
+the test suit on multiple directories and run them
+separately or together.
 
 ### Setup test interpreter and test case files extension
 _retest_ uses _find_ to locate all test cases
@@ -35,7 +56,7 @@ in the test suit. By default, all files with
 _'*.case'_ extension.
 
 Test cases are considered to be bash scripts
-by default, but you can specify different
+by default, but you can specify a different
 interpreter with _--exec/-x_ option.
 
 Say, we want to execute all *.py files with
@@ -78,7 +99,7 @@ of a test case script that has been evaluated.
 
 Some configuration options can be set over the environment variables.
 
-Note, that command line options are take precedence over the onces
+Note, that command line options take precedence over the variables
 from the environment.
 
 Possible environment variables:
@@ -88,3 +109,10 @@ RETEST_EXEC       - an interpreter for test execution
 RETEST_CASE_EXT   - a file extention for test cases
 RETEST_EXPECT_EXT - a file extention for expected results
 ```
+
+## Tips
+
+* It is possible to use _retest_ as a global script from _/usr/local/bin_.
+* Wrap _retest_ call in a service script to hide the configuration boilerplate.
+* Use a wrapper script to export config variables for use in the test cases.
+
