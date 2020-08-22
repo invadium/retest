@@ -5,10 +5,10 @@ FAILED=NO # a test suit failed flag
 
 # === test config ===
 # source data config
-RETEST_PATH=${RETEST_PATH:-"./test"} # a path for test lookup
-EXEC=${RETEST_EXEC:-"bash"}          # an interpreter for test execution
-CASE=${RETEST_CASE_EXT:-"case"}            # a file extention for test cases
-EXPECT=${RETEST_EXPECT_EXT:-"expect"}    # a file extention for expected results
+export RETEST_PATH=${RETEST_PATH:-"./test"}  # a path for test cases lookup
+EXEC=${RETEST_EXEC:-"bash"}           # an interpreter for test execution
+CASE=${RETEST_CASE_EXT:-"case"}       # a file extention for test cases
+EXPECT=${RETEST_EXPECT_EXT:-"expect"} # a file extention for expected results
 # output flags
 HELP=NO
 VERBOSE=NO
@@ -51,7 +51,7 @@ done
 # === help ===
 if [ $HELP == 'YES' ]; then
     echo 'ReTest - a minimalistic bash-powered test framework'
-    echo '    searches and evaluates all .case files in the test folder'
+    echo '    searches and evaluates all *.case files in the ./test folder'
     echo '    shows only the FAILED tests by default'
     echo ''
     echo 'Usage: retest [OPTION]...'
@@ -72,46 +72,45 @@ fi
 # === find and run all the tests === 
 for f in $(find $TESTPATH -name "*.$CASE"); do
 
-dir=`dirname $f`
-case=`basename $f`
+    test=${f%.$CASE}       # test case name with path included and extension excluded
+    dir=`dirname $f`       # test case directory
+    case=`basename $f`     # test case file name
+    base=${case%.$CASE}    # pure test case name (no extension)
+    expect=$base".$EXPECT" # derive an expected data file name from the base name
 
-test=${f%.$CASE}
-base=${case%.$CASE}
-expect=$base".$EXPECT"
+    # set test directory
+    cd $dir
 
-# set test directory
-cd $dir
+    val=`$EXEC $case`
+    match=`cat $expect`
 
-val=`$EXEC $case`
-match=`cat $expect`
-
-if [ "$val" == "$match" ]
-then
-    if [ $VERBOSE == 'YES' ]; then
-        echo $test' - OK'
+    if [ "$val" == "$match" ]
+    then
+        if [ $VERBOSE == 'YES' ]; then
+            echo $test' - OK'
+        fi
+        if [ $SOURCE == 'YES' ]; then
+            cat $case
+        fi
+        if [ $TRACE == 'YES' ]; then
+            echo $val' == '$match
+        fi
+    else
+        FAILED=YES
+        if [ $VERBOSE == 'YES' ]; then
+            echo "$test - FAILED ["
+            echo "$val"
+            echo "=============================="
+            echo "$match"
+            echo "]"
+        fi
+        if [ $SOURCE == 'YES' ]; then
+            cat $case
+        fi
+        if [ $TRACE == 'YES' ]; then
+            echo $val' == '$match
+        fi
     fi
-    if [ $SOURCE == 'YES' ]; then
-        cat $case
-    fi
-    if [ $TRACE == 'YES' ]; then
-        echo $val' == '$match
-    fi
-else
-    FAILED=YES
-	if [ $VERBOSE == 'YES' ]; then
-        echo "$test - FAILED ["
-        echo "$val"
-        echo "=============================="
-        echo "$match"
-        echo "]"
-    fi
-	if [ $SOURCE == 'YES' ]; then
-		cat $case
-	fi
-	if [ $TRACE == 'YES' ]; then
-	    echo $val' == '$match
-	fi
-fi
 done
 
 if [ $FAILED == 'YES' ]; then
