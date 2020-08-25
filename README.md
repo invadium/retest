@@ -7,10 +7,10 @@ _A minimalistic bash-powered test anti-framework._
 
 What if I tell you, that you can test your system without
 a testing framework, using nothing, but a bunch
-of bash scripts and text files.
+of shell scripts and plain text files.
 
-With ReTest it is possible to setup a minimalistic
-testing environment just by dropping a single shell
+With _ReTest_ it is possible to setup a minimalistic
+testing environment just by dropping a single bash
 script into your project's directory.
 
 
@@ -22,6 +22,15 @@ near your test suit folder.
 You can use _curl_ for that:
 ```
     curl https://raw.githubusercontent.com/invider/retest/master/retest > retest
+```
+
+Or wget:
+```
+    wget https://raw.githubusercontent.com/invider/retest/master/retest
+```
+
+Add permissions to execute the shell file:
+```
     chmod +x retest
 ```
 
@@ -36,17 +45,21 @@ for details.
 ## Test Suit Organization
 
 A test suit is just a folder with test case scripts
-and expected result files.
+doubled by expected result files.
 
 The name of a test case MUST match the name
 of the corresponding result file.
 
+```
+    testA.py    testA.expect
+    testB.py    testB.expect
+```
+
 The idea behind _retest_ testing model
 is pretty simple - it runs the test case scripts
-and matches results with data placed in *.expect files.
+and matches results with the data placed in *.expect files.
 If a result matches expected data, the test passes.
-Otherwise, the test fails and the whole test set run
-is considered failed
+Otherwise, the test fails.
 
 Check out a test suit organization example
 for [bash](https://github.com/invider/retest/tree/master/test)
@@ -64,13 +77,19 @@ the location explicitly:
 
 ```bash
     ./retest --path ./test-cases
+```
+
+Often, it makes sense to create a substructure
+to be able to run test subsets separately:
+```
     ./retest -p ./test/set-1
     ./retest -p ./test/set-2
     ./retest -p ./test
 ```
 As you can see, it is possible to split
 the test suit on multiple directories and run them
-separately or together.
+one-by-one or all together.
+
 
 ### Setup test interpreter and test case files extension
 _retest_ uses _find_ to locate all test cases
@@ -106,6 +125,7 @@ for expected results by using _--expect/-e_ option:
     ./retest --expect testdata
 ```
 
+
 ### Configure the Output Details
 You have a number of options to configure
 the output details.
@@ -116,6 +136,7 @@ and show failure details.
 The _--trace_ option is useful to debug test evaluation results.
 The _--source_ option shows the original content
 of a test case script that has been evaluated.
+
 
 ### Environment Configuration
 
