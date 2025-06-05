@@ -1,4 +1,4 @@
-# ReTest
+# reTest
 
 _A minimalistic bash-powered test anti-framework._
 
@@ -9,25 +9,31 @@ What if I tell you, that you can test your system without
 a testing framework, using nothing, but a bunch
 of shell scripts and plain text files.
 
-With _ReTest_ it is possible to setup a minimalistic
+With _reTest_ it is possible to setup a minimalistic
 testing environment just by dropping a single bash
 script into your project's directory.
 
 
 ## Installation
 
-Just download and place the _retest_ bash script
-near your test suit folder.
+
+### Download
+
+Just download and place the [_retest_](https://raw.githubusercontent.com/invadium/rebasic/refs/heads/master/retest)
+bash script near your test suit folder.
 
 You can use _curl_ for that:
 ```
-    curl https://raw.githubusercontent.com/invider/retest/master/retest > retest
+    curl https://raw.githubusercontent.com/invadium/retest/master/retest > retest
 ```
 
-Or wget:
+Or _wget_:
 ```
-    wget https://raw.githubusercontent.com/invider/retest/master/retest
+    wget https://raw.githubusercontent.com/invadium/retest/master/retest
 ```
+
+
+### Configure
 
 Add permissions to execute the shell file:
 ```
@@ -62,10 +68,10 @@ If a result matches expected data, the test passes.
 Otherwise, the test fails.
 
 Check out a test suit organization example
-for [bash](https://github.com/invider/retest/tree/master/test)
+for [bash](https://github.com/invadium/retest/tree/master/test)
 as well as for other languages.
 
-Look at [some examples](https://github.com/invider/retest/blob/master/validate)
+Look at [some examples](https://github.com/invadium/retest/blob/master/validate)
 of how _retest_ can be run for various scenarios.
 
 
@@ -106,6 +112,7 @@ _python_ interpreter:
 ```bash
     ./retest --exec /usr/bin/python --case py
 ```
+
 
 ### Set expected results file extension
 Results of _retest_ execution of a test case
@@ -153,9 +160,19 @@ RETEST_CASE_EXT   - a file extention for test cases
 RETEST_EXPECT_EXT - a file extention for expected results
 ```
 
+
+
 ## Tips
 
 * It is possible to use _retest_ as a global script from _/usr/local/bin_.
 * Wrap _retest_ call in a service script to hide the configuration boilerplate.
 * Use a wrapper script to export config variables for use in the test cases.
+
+
+
+## Real Use Cases
+
+Check out how *reTest* is used in real projects:
+
+* [ReBasic Interpreter](https://github.com/invadium/rebasic) - a reimplementation of an old 80s-styled BASIC for the modern web.
 
