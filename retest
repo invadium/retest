@@ -14,6 +14,7 @@ HELP=NO
 VERBOSE=NO
 TRACE=NO
 SOURCE=NO
+LOCAL=NO
 
 # parse and apply command line arguments
 #for i in "$@"; do
@@ -37,6 +38,10 @@ do
         ;;
         -s|--source)
         SOURCE=YES
+        shift
+        ;;
+        -l|--local)
+        LOCAL=YES
         shift
         ;;
         -p|--path)
@@ -83,6 +88,7 @@ if [ $HELP == 'YES' ]; then
     echo '    -v | --verbose show all test results'
     echo '    -t | --trace   show evaluation results'
     echo '    -s | --source  show test sources'
+    echo '    -l | --local   run tests from local folder'
     exit 0
 fi
 
@@ -90,7 +96,13 @@ fi
 baseDir=`pwd`
 
 # === find and run all the tests === 
-for f in $(find $RETEST_PATH -name "*.$CASE"); do
+if [ $TRACE == 'YES' ]; then
+    echo "=============================================="
+    echo "reTest Order Tree:"
+    find $RETEST_PATH -name "*.$CASE" | sort
+    echo "=============================================="
+fi
+for f in $(find $RETEST_PATH -name "*.$CASE" | sort); do
 
     test=${f%.$CASE}       # test case name with path included and extension excluded
     dir=`dirname $f`       # test case directory
@@ -98,10 +110,18 @@ for f in $(find $RETEST_PATH -name "*.$CASE"); do
     name=${case%.$CASE}    # pure test case name (no extension)
     expect=$name".$EXPECT" # derive an expected data file name from the name
 
-    # set test directory
+    if [ $LOCAL == 'NO' ]; then
+        # run the test
+        val=`$EXEC $f`
+    fi
+
+    # set the test directory
     cd $dir
 
-    val=`$EXEC $case`
+    if [ $LOCAL == 'YES' ]; then
+        # run the test
+        val=`$EXEC $case`
+    fi
 
     if [ ! -f $expect ]; then
         echo "Missing [$test.$EXPECT] to match expected results"

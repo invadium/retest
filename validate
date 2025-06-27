@@ -1,5 +1,5 @@
 #!/bin/sh
-./retest -v
+./retest -l -v
 ./retest -p ./test-python -c py -x python -v
 ./retest -p ./test-ruby -c rb -x ruby -v
 ./retest -p ./test-perl -c pl -x perl -v
