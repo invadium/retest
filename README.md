@@ -1,4 +1,4 @@
-# ReTest
+# reTest
 
 _A minimalistic bash-powered test anti-framework._
 
@@ -9,14 +9,14 @@ What if I tell you, that you can test your system without
 a testing framework, using nothing, but a bunch
 of shell scripts and plain text files.
 
-With _ReTest_ it is possible to setup a minimalistic
+With _reTest_ it is possible to setup a minimalistic
 testing environment just by dropping a single bash
 script into your project's directory.
 
 
 ## Installation
 
-Just download and place the _retest_ bash script
+Just download and place the _reTest_ bash script
 near your test suit folder.
 
 You can use _curl_ for that:
@@ -55,7 +55,7 @@ of the corresponding result file.
     testB.py    testB.expect
 ```
 
-The idea behind _retest_ testing model
+The idea behind _reTest_ testing model
 is pretty simple - it runs the test case scripts
 and matches results with the data placed in *.expect files.
 If a result matches expected data, the test passes.
@@ -66,7 +66,7 @@ for [bash](https://github.com/invider/retest/tree/master/test)
 as well as for other languages.
 
 Look at [some examples](https://github.com/invider/retest/blob/master/validate)
-of how _retest_ can be run for various scenarios.
+of how _reTest_ can be run for various scenarios.
 
 
 ### Customize test cases source directory
